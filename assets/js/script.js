@@ -328,29 +328,10 @@ function convertToHex() {
     
     // Perform the conversion to hexadecimal
     const hexValue = integerNum.toString(16).toUpperCase();
-    
   
-    
-    // Create formatted display message
-    let displayMessage = '<span class="small-label">Hexadecimal Conversion</span>';
-    displayMessage += '<strong>';
-    
-    // Add negative sign if original number was negative
-    if (num < 0) {
-        displayMessage += 'Decimal: -' + integerNum + ' = Hex: -0x' + hexValue;
-    } else {
-        displayMessage += 'Decimal: ' + integerNum + ' = Hex: 0x' + hexValue;
-    }
-    
-    displayMessage += '</strong>';
-    
-    
     // Update the main display to show the hex value
     currentExpression = hexValue;
     updateResult();
-    
-    // Enable the speak button for the result
-    enableSpeakButton();
     
     console.log('HEX Conversion successful:', integerNum, '->', hexValue);
 }
