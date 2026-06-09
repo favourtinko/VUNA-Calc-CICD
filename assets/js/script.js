@@ -246,8 +246,6 @@ function operatorToResult(value) {
 
 function clearResult() {
     currentExpression = '';
-    document.getElementById('word-result').innerHTML = '';
-    document.getElementById('word-area').style.display = 'none';
     updateResult();
 }
 
@@ -264,23 +262,22 @@ function calculateResult() {
             throw new Error();
         }
 
-       calculationHistory?.push({
+        calculationHistory?.push({
             expression: currentExpression,
-            words: numberToWords(result),
+            words: '',
             time: new Date().toLocaleTimeString()
         });
 
         if (calculationHistory.length > 20) calculationHistory.shift();
 
         localStorage.setItem("calcHistory", JSON.stringify(calculationHistory));
-        renderHistory(); 
+        renderHistory();
 
         currentExpression = result.toString();
         updateResult();
-        document.getElementById('word-result').innerHTML = numberToWords(result);
 
     } catch (e) {
-        currentExpression= 'Error';
+        currentExpression = 'Error';
         updateResult();
     }
 }
@@ -332,9 +329,7 @@ function convertToHex() {
     // Perform the conversion to hexadecimal
     const hexValue = integerNum.toString(16).toUpperCase();
     
-    // Get references to display elements
-    const wordResult = document.getElementById('word-result');
-    const wordArea = document.getElementById('word-area');
+  
     
     // Create formatted display message
     let displayMessage = '<span class="small-label">Hexadecimal Conversion</span>';
@@ -349,9 +344,6 @@ function convertToHex() {
     
     displayMessage += '</strong>';
     
-    // Display the result
-    wordResult.innerHTML = displayMessage;
-    wordArea.style.display = 'flex';
     
     // Update the main display to show the hex value
     currentExpression = hexValue;
@@ -886,23 +878,11 @@ function getPrecedence(node) {
 
 function checkPrime() {
     const num = parseFloat(currentExpression);
-    
-    if (isNaN(num) || !Number.isInteger(num) || num < 0 || currentExpression.includes(' ') || currentExpression.includes('+') || currentExpression.includes('-') || currentExpression.includes('*') || currentExpression.includes('/') || currentExpression.includes('^') || currentExpression.includes('(') || currentExpression.includes(')')) {
-        alert('Please enter a single positive whole number to check if it\'s prime');
+    if (isNaN(num) || !Number.isInteger(num) || num < 0) {
+        alert('Please enter a single positive whole number');
         return;
     }
-    
-    const wordResult = document.getElementById('word-result');
-    const wordArea = document.getElementById('word-area');
-    
-    if (isPrime(num)) {
-        wordResult.innerHTML = '<span class="small-label">Prime Check</span><strong>' + num + ' is a PRIME number! ✓</strong>';
-    } else {
-        wordResult.innerHTML = '<span class="small-label">Prime Check</span><strong>' + num + ' is NOT a prime number ✗</strong>';
-    }
-    
-    wordArea.style.display = 'flex';
-    enableSpeakButton();
+    alert(num + (isPrime(num) ? ' is a PRIME number ✓' : ' is NOT a prime number ✗'));
 }
 
 // ------------------------------
@@ -1041,81 +1021,17 @@ function numberToHausa(num) {
     return result.trim();
 }
 // translate to hausas 
-function translateToHausa() {
-    if (!left || operator || right) return;
-
-    const hausa = numberToHausa(left);
-    const wordResult = document.getElementById('word-result');
-
-    wordResult.innerHTML =
-        '<span class="small-label">Sakamako a Hausa</span><strong>' + hausa + '</strong>';
-}
+function translateToHausa() {}
 
 
 
 function updateResult() {
     document.getElementById('result').value = currentExpression || '0';
-
-    const wordResult = document.getElementById('word-result');
-    const wordArea = document.getElementById('word-area');
-
-    // Check if currentExpression is a valid number
-    const num = parseFloat(currentExpression);
-    if (!isNaN(num) && isFinite(num) && currentExpression.trim() === num.toString()) {
-        wordResult.innerHTML = '<span class="small-label">Result in words</span><strong>' + numberToWords(currentExpression) + '</strong>';
-        wordArea.style.display = 'flex';
-    } else {
-        wordResult.innerHTML = '';
-        wordArea.style.display = 'none';
-    }
-
-    enableSpeakButton();
-}
-
-// ------------------------------
-// Text-to-Speech
-// ------------------------------
-function speakResult() {
-    const speakBtn = document.getElementById('speak-btn');
-    const wordResultEl = document.getElementById('word-result');
-
-    const words = wordResultEl.querySelector('strong')?.innerText || '';
-
-    if (!words) return;
-
-    if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        speakBtn.classList.remove('speaking');
-        return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(words);
-    utterance.rate = 0.9;
-    utterance.onstart = () => speakBtn.classList.add('speaking');
-    utterance.onend = () => speakBtn.classList.remove('speaking');
-
-    window.speechSynthesis.speak(utterance);
-}
-
-// ------------------------------
-// Speak Button Enable/Disable
-// ------------------------------
-function enableSpeakButton() {
-    const speakBtn = document.getElementById('speak-btn');
-    if (!speakBtn) return;
-    const hasContent = document.getElementById('word-result').innerHTML.trim().length > 0;
-    speakBtn.disabled = !hasContent;
 }
 
 
-function backToEnglish() {
-    if (!left || operator || right) return;
 
-    const wordResult = document.getElementById('word-result');
-
-    wordResult.innerHTML =
-        '<span class="small-label">Result in words</span><strong>' + numberToWords(left) + '</strong>';
-}
+function backToEnglish() {}
 
 // Factor Finder & Prime Checker
 // Get factors of a number
@@ -1155,7 +1071,7 @@ function updateStepsDisplay() {
   // Keeping it here for compatibility
 }
 
-fetchCurrencyRates()
+fetchCurrencyRates();
 
 function copyResult() {
     const text = document.getElementById('result').value;
@@ -1168,7 +1084,7 @@ function copyResult() {
 
 
 function startVoiceInput() {
-    clearResult()
+    clearResult();
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -1241,7 +1157,7 @@ function normalizeSpeech(text) {
     normalized = normalized.replaceAll(word, numbers[word]);
   }
 
-  normalized = normalized.replace(/([\+\-\*\/])/g, ' $1 ');
+  normalized = normalized.replace(/([+\-*/])/g, ' $1 ');
 
   // Split into tokens
   return normalized

@@ -4,8 +4,15 @@
   "description": "Enhanced English Language Calculator\r A user-friendly calculator application that not only performs mathematical computations but also expresses the results in natural English language. This tool bridges the gap between numerical output and linguistic comprehension.\r Key Features\r Natural Language Output",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "test": "jest --coverage",
+  "lint": "eslint .",
+  "build": "node scripts/build.mjs"
+},
+"jest": {
+  "testEnvironment": "node",
+  "collectCoverageFrom": ["src/**/*.js"],
+  "coverageThreshold": { "global": { "branches": 60, "functions": 80, "lines": 80, "statements": 80 } }
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/favourtinko/VUNA-Calc.git"
@@ -20,5 +27,10 @@
   "homepage": "https://github.com/favourtinko/VUNA-Calc#readme",
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.1",
+    "jest": "^30.4.2"
   }
 }
