@@ -149,46 +149,6 @@ function updateExampleConversion(value) {
   document.getElementById('example-add').textContent = formatResult(value + 10);
 }
 
-function fetchCurrencyRates() {
-  const btn = document.getElementById('currency-refresh-btn');
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = '⏳';
-  }
-  
-  fetch('https://api.exchangerate-api.com/v4/latest/USD')
-    .then(response => response.json())
-    .then(data => {
-      if (data.rates) {
-        
-        console.log('Fetched currency rates:', data);    
-        // API returns rates relative to USD (1 USD = data.rates[currency])
-        currencyRates['EUR'] = data.rates.EUR || currencyRates['EUR'];
-        currencyRates['GBP'] = data.rates.GBP || currencyRates['GBP'];
-        currencyRates['JPY'] = data.rates.JPY || currencyRates['JPY'];
-        currencyRates['CAD'] = data.rates.CAD || currencyRates['CAD'];
-        currencyRates['AUD'] = data.rates.AUD || currencyRates['AUD'];
-        currencyRates['NGN'] = data.rates.NGN || currencyRates['NGN'];
-
-        const timestamp = new Date().toLocaleTimeString();
-        document.getElementById('currency-timestamp').textContent = `Last updated: ${timestamp}`;
-
-        convertUnit('currency');
-        if (btn) {
-          btn.textContent = '🔄';
-          btn.disabled = false;
-        }
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching currency rates:', error);
-      document.getElementById('currency-timestamp').textContent = 'Unable to fetch live rates';
-      if (btn) {
-        btn.textContent = '🔄';
-        btn.disabled = false;
-      }
-    });
-}
 
 // Set theme on page load from localStorage
 window.addEventListener('DOMContentLoaded', function () {
@@ -1054,7 +1014,6 @@ function updateStepsDisplay() {
   // Keeping it here for compatibility
 }
 
-fetchCurrencyRates();
 
 function copyResult() {
     const text = document.getElementById('result').value;
