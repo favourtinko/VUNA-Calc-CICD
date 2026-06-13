@@ -227,9 +227,9 @@
     }
 
     .btn-equals {
-      background: var(--primary-color);
-      color: white;
-      grid-column: span 4; /* full width */
+    background: var(--primary-color);
+    color: white;
+    grid-column: span 3;
     }
 
     .btn-equals:hover {
@@ -411,7 +411,9 @@
                     <button class="btn btn-operator" onclick="operatorToResult('+')">+</button>
 
                     <!-- Row 6: = (full width) -->
-                    <button class="btn btn-equals" onclick="calculateResult()">=</button>
+                    <!-- Row 6: xʸ and = -->
+                    <button class="btn btn-operator" onclick="operatorToResult('**')">xʸ</button>
+                    <button class="btn btn-equals" style="grid-column: span 3;" onclick="calculateResult()">=</button>
 
                   </div>
                 </div>
